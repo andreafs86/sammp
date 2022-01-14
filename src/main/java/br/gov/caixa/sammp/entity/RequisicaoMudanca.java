@@ -2,6 +2,7 @@ package br.gov.caixa.sammp.entity;
 
 import java.time.LocalDate;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -18,6 +19,7 @@ public class RequisicaoMudanca {
 	private LocalDate dataCrq;
 	private LocalDate dataPrevista;
 	private LocalDate dataImplantacao;
+	@Column(length = 1000)
 	private String detalhe;
 
 	public Double getNumeroRtc() {
