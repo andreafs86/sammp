@@ -18,6 +18,7 @@ public class RequisicaoMudancaDTO {
 	@JsonIgnore
 	private Logger logger = Logger.getLogger(RequisicaoMudancaDTO.class.getName());
 	
+	private Long id;
 	private Double numeroRtc;
 	private String siglaSistema;
 	private String resumo;
@@ -151,8 +152,15 @@ public class RequisicaoMudancaDTO {
 		rm.setDataPrevista(dataPrevista);
 		rm.setDataImplantacao(dataImplantacao);
 		rm.setDetalhe(detalhe);
+		rm.setId(id);
 		
 		return rm;
+	}
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
 	}
 	
 }

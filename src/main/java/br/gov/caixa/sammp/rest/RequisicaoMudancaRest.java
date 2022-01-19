@@ -42,24 +42,24 @@ public class RequisicaoMudancaRest {
 	public ResponseEntity<RequisicaoMudancaDTO> merge(@RequestBody RequisicaoMudancaDTO dto, UriComponentsBuilder uriBuilder) throws Exception{
 		logger.info("entrou no merge de Requisição de mudança");
 		
-		Optional<RequisicaoMudanca> opRm = rmRepository.findById(dto.getNumeroRtc());
 		RequisicaoMudanca rm;
-		if(opRm.isPresent()) {
-			rm = opRm.get();
-			rm.setDto(dto);
-		}else {
+		if(dto.getId() == null) {
 			rm = dto.getRM();
 			rmRepository.save(rm);
+		}else {
+			Optional<RequisicaoMudanca> opRm = rmRepository.findById(dto.getId());
+			rm = opRm.get();
+			rm.setDto(dto);
 		}
 		
 		DecimalFormat df = new DecimalFormat("#");
-		URI uri = uriBuilder.path("/rm/{rtc}").buildAndExpand(df.format(rm.getNumeroRtc())).toUri();
+		URI uri = uriBuilder.path("/rm/{rtc}").buildAndExpand(df.format(rm.getId())).toUri();
 		return ResponseEntity.created(uri).body(dto);
 	}
 
 	@GetMapping("{rtc}")
-	public ResponseEntity<RequisicaoMudancaDTO> detalhar(@PathVariable Double rtc) {
-		Optional<RequisicaoMudanca> optional = rmRepository.findById(rtc);
+	public ResponseEntity<RequisicaoMudancaDTO> detalhar(@PathVariable Long id) {
+		Optional<RequisicaoMudanca> optional = rmRepository.findById(id);
 		
 		if(optional.isPresent()) {
 			return ResponseEntity.ok(optional.get().getDto());
@@ -93,13 +93,13 @@ public class RequisicaoMudancaRest {
 		return retorno;
 	}
 	
-	@DeleteMapping("{rtc}")
+	@DeleteMapping("{id}")
 	@Transactional
-	public ResponseEntity<?> delete(@PathVariable Double rtc) {
-		Optional<RequisicaoMudanca> optional = rmRepository.findById(rtc);
+	public ResponseEntity<?> delete(@PathVariable Long id) {
+		Optional<RequisicaoMudanca> optional = rmRepository.findById(id);
 		
 		if(optional.isPresent()) {
-			rmRepository.deleteById(rtc);
+			rmRepository.deleteById(id);
 			return ResponseEntity.ok().build();
 		}
 		
