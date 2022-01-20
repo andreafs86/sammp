@@ -17,6 +17,7 @@ public class RequisicaoMudanca {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(columnDefinition = "serial")
 	private Long id;
+	@Column(unique = true)
 	private Double numeroRtc;
 	private String siglaSistema;
 	private String resumo;

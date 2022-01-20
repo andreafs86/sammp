@@ -18,4 +18,6 @@ public interface RequisicaoMudancaRepository extends CrudRepository<RequisicaoMu
 			+ "(rm.dataImplantacao between :dataInicio and :dataFim)")
 	public List<RequisicaoMudanca> findByDataInicioAndDataFim(
 			@Param("dataInicio") LocalDate dataInicio, @Param("dataFim") LocalDate dataFim);
+	
+	public List<RequisicaoMudanca> findByNumeroRtc(Double numeroRtc);
 }

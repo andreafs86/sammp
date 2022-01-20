@@ -9,6 +9,7 @@ import java.util.Optional;
 import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import br.gov.caixa.sammp.dto.RequisicaoMudancaDTO;
@@ -39,10 +41,23 @@ public class RequisicaoMudancaRest {
     
 	@PostMapping
 	@Transactional
-	public ResponseEntity<RequisicaoMudancaDTO> merge(@RequestBody RequisicaoMudancaDTO dto, UriComponentsBuilder uriBuilder) throws Exception{
+	public ResponseEntity<?> merge(@RequestBody RequisicaoMudancaDTO dto, UriComponentsBuilder uriBuilder) throws Exception{
 		logger.info("entrou no merge de Requisição de mudança");
 		
 		RequisicaoMudanca rm;
+		
+		if(dto.getNumeroRtc() != null) {
+			List<RequisicaoMudanca> rms = rmRepository.findByNumeroRtc(dto.getNumeroRtc());
+			
+			if(rms != null) {
+				for(RequisicaoMudanca rmRtc : rms) {
+					if(!rmRtc.getId().equals(dto.getId())) {
+						throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Já existe este número de RTC em outro cadastro");
+					}
+				}
+			}
+		}
+		
 		if(dto.getId() == null) {
 			rm = dto.getRM();
 			rmRepository.save(rm);
