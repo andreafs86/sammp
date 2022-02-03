@@ -46,6 +46,10 @@ public class RequisicaoMudancaRest {
 		
 		RequisicaoMudanca rm;
 		
+		if(dto.getNumeroRtc() != null && dto.getNumeroRtc() == 0) {
+			dto.setNumeroRtc(null);
+		}
+		
 		if(dto.getNumeroRtc() != null) {
 			List<RequisicaoMudanca> rms = rmRepository.findByNumeroRtc(dto.getNumeroRtc());
 			
